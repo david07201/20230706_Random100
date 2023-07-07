@@ -1,8 +1,9 @@
 import os
 import random
 import datetime
-import tkinter as tk
 from configparser import ConfigParser
+
+import Window
 
 
 class Conf(ConfigParser):
@@ -39,18 +40,19 @@ class Conf(ConfigParser):
             self.write(f, space_around_delimiters=True)
 
 class Generate():
-    def __init__(self):
+    def __init__(self, mainwin:Window.Window):
         self.today: str = datetime.date.today().strftime('%Y-%m-%d')
         self.cd: str = f'{random.randint(1, 100):0>3}'
+        self.mainwin = mainwin
 
     def is_lately(self, lastday: str) -> bool:
         return True if self.today == lastday else False
     
     def show(self, cd: str, count: int, text: str='') -> None:
-        print('日期：' + self.today)
-        print(text + '今天的 CD 號碼為：')
-        print(cd)
-        print(f'累計 {count} 次。')
+        self.mainwin.label1['text'] = '日期：' + self.today
+        self.mainwin.label2['text'] = text + '今天的 CD 號碼為：'
+        self.mainwin.label3['text'] = cd
+        self.mainwin.label4['text'] = f'累計 {count} 次。'
 
     def go(self, config: Conf) -> None:
         if self.is_lately(config['last']['date']):
@@ -72,12 +74,11 @@ class Generate():
 
 
 if __name__ == '__main__':
+    mainwin = Window.Window()
+
     config = Conf()
     config.take()
-    generate = Generate()
+    generate = Generate(mainwin)
     generate.go(config)
 
-
-
-    
-    
+    mainwin.mainloop()
