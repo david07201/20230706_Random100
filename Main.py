@@ -70,6 +70,7 @@ class Generate():
                 count=config['counter'].getint(self.cd)
             )
 
+
 if __name__ == '__main__':
     config = Conf()
     config.take()
